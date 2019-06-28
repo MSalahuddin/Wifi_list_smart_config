@@ -4,7 +4,8 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
-  TextInput
+  TextInput,
+  ToastAndroid
 } from "react-native";
 import { Colors, Metrics, Fonts } from "../../theme";
 import QRCodeScanner from "react-native-qrcode-scanner";
@@ -18,14 +19,19 @@ class QRScannerScreen extends Component {
     super(props);
     this.state = {
       wifiPassword: "",
-      isQRScan: false
+      isQRScan: false,
+      isSmartConfig: false
     };
   }
+
+  showToast = message => {
+    ToastAndroid.show(message, ToastAndroid.SHORT);
+  };
 
   qrScanner = data => {
     const wifiData = this.props.wifiData;
     let ssid = wifiData.SSID;
-    const { wifiPassword } = this.state;
+    const { wifiPassword, isSmartConfig } = this.state;
     // console.log(data.data, "aaaaaaaaaaaaa");
     Smartconfig.start({
       type: "esptouch", //or airkiss, now doesn't not effect
@@ -35,11 +41,33 @@ class QRScannerScreen extends Component {
       timeout: 5000 //now doesn't not effect
     })
       .then(function(results) {
-        console.log(results);
+        this.setState({ isSmartConfig: true }, () => {
+          this.setState(
+            {
+              isQRScan: false
+            },
+            () => {
+              this.showToast(data.data);
+            }
+          );
+        });
       })
       .catch(function(error) {
         console.log(error, "errrrrrrrrr");
       });
+    setTimeout(() => {
+      if (!isSmartConfig) {
+        this.setState(
+          {
+            isQRScan: false
+          },
+          () => {
+            this.showToast(data.data);
+          }
+        );
+      }
+    }, 30000);
+
     // let qrData = JSON.parse(data.data);
     // console.log(qrData, "dataaa");
   };

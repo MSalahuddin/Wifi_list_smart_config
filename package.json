@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "apisauce": "^1.0.2",
+    "aws-amplify": "^1.1.29",
     "react": "16.8.3",
     "react-native": "0.59.5",
     "react-native-android-wifi": "^0.0.41",
+    "react-native-aws-cognito-js": "^0.0.7",
     "react-native-camera": "git+https://git@github.com/react-native-community/react-native-camera.git",
     "react-native-qrcode-scanner": "^1.2.1",
     "react-native-router-flux": "^4.0.6",

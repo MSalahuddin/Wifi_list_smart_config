@@ -27,26 +27,6 @@ import QRScannerScreen from "../containers/QRScanner";
 import WifiListScreen from "../containers/WifiList";
 import { Colors, Metrics, Images } from "../theme";
 import styles from "./styles";
-function onBackPress() {
-  // const scene = Actions.currentScene;
-  // if (BACK_SCENES.includes(scene)) {
-  //     return false;
-  // }
-  // if (scene === "tour" || scene === "landingpage") {
-  //     utils.showYesNoMessage(
-  //         strings("alertMessages.confirm"),
-  //         strings("alertMessages.confirmAppExit"),
-  //         () => {
-  //             BackAndroid.exitApp();
-  //         },
-  //         () => { }
-  //     );
-  //     return true;
-  // } else {
-  //     Actions.pop();
-  //     return true;
-  // }
-}
 
 const navigator = Actions.create(
   <Stack
@@ -55,18 +35,12 @@ const navigator = Actions.create(
     key="root"
     tintColor={Colors.primary}
   >
-    {/* <Scene key="tour" component={CounterComponent} /> */}
-    {/* {DrawerMenu.getDrawerMenu()} */}
-
     <Scene
       tintColor="white"
       hideNavBar
       title={""}
       key="WifiListScreen"
       component={WifiListScreen}
-      // renderLeftButton={() => (
-      //   <TabButtonLeft imagesArray={["rightArrow"]} actions={[Actions.pop]} />
-      // )}
     />
     <Scene
       tintColor="white"
@@ -74,15 +48,10 @@ const navigator = Actions.create(
       title={""}
       key="QRScannerScreen"
       component={QRScannerScreen}
-      // renderLeftButton={() => (
-      //   <TabButtonLeft imagesArray={["rightArrow"]} actions={[Actions.pop]} />
-      // )}
     />
   </Stack>
 );
 
-export default () => (
-  <AppNavigator backAndroidHandler={onBackPress} navigator={navigator} />
-);
+export default () => <AppNavigator navigator={navigator} />;
 
 const AppNavigator = connect()(Router);
