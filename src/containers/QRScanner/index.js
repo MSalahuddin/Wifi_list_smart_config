@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  ToastAndroid
+  Alert
 } from "react-native";
 import { Colors, Metrics, Fonts } from "../../theme";
 import QRCodeScanner from "react-native-qrcode-scanner";
@@ -20,19 +20,27 @@ class QRScannerScreen extends Component {
     this.state = {
       wifiPassword: "",
       isQRScan: false,
-      isSmartConfig: false
+      isSmartConfig: false,
+      smartConfigResult: null
     };
   }
 
   showToast = message => {
-    ToastAndroid.show(message, ToastAndroid.SHORT);
+    console.log(message, "message");
+    let bssid = message[0].bssid;
+    let ipv4 = message[0].ipv4;
+    Alert.alert(
+      "",
+      `${bssid} has been successfully configured with ip ${ipv4}`
+    );
+    // ToastAndroid.show(`${toastMessage}`, ToastAndroid.SHORT);
   };
 
   qrScanner = data => {
     const wifiData = this.props.wifiData;
     let ssid = wifiData.SSID;
     const { wifiPassword, isSmartConfig } = this.state;
-    // console.log(data.data, "aaaaaaaaaaaaa");
+    this.setState({ isQRScan: false });
     Smartconfig.start({
       type: "esptouch", //or airkiss, now doesn't not effect
       ssid: ssid,
@@ -40,33 +48,14 @@ class QRScannerScreen extends Component {
       password: wifiPassword,
       timeout: 5000 //now doesn't not effect
     })
-      .then(function(results) {
-        this.setState({ isSmartConfig: true }, () => {
-          this.setState(
-            {
-              isQRScan: false
-            },
-            () => {
-              this.showToast(data.data);
-            }
-          );
+      .then(results => {
+        this.setState({ smartConfigResult: results, isQRScan: false }, () => {
+          this.showToast(results);
         });
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error, "errrrrrrrrr");
       });
-    setTimeout(() => {
-      if (!isSmartConfig) {
-        this.setState(
-          {
-            isQRScan: false
-          },
-          () => {
-            this.showToast(data.data);
-          }
-        );
-      }
-    }, 30000);
 
     // let qrData = JSON.parse(data.data);
     // console.log(qrData, "dataaa");
